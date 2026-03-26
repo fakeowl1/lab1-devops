@@ -44,7 +44,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Failed to connect to DB: %v", err)
 	}
-	
+
 	defer db.Close()
 
 	router := routers.Router(db)

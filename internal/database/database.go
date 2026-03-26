@@ -50,3 +50,15 @@ func (d *GormDatabase) Close() {
 	}
 	sqlDB.Close()
 }
+
+func (d* GormDatabase) Ping() error {
+	if d == nil || d.db == nil {
+		return fmt.Errorf("database connection is not initialized")
+  }
+	sqlDB, err := d.db.DB()
+	if (err != nil) {
+		return err
+	}
+
+	return sqlDB.Ping()
+}

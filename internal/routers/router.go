@@ -68,5 +68,14 @@ func Router(db *database.GormDatabase) *gin.Engine {
 			notesGroup.GET("/:id", noteApi.GetNote)
 	}
 	
+	healthySrv := service.NewHealthyService(db)
+	healthyApi := api.NewHealthyAPI(healthySrv)
+
+	healthyGroup := r.Group("/healthy")
+	{
+		healthyGroup.GET("/alive", healthyApi.Alive)
+		healthyGroup.GET("/ready", healthyApi.Ready)
+	}
+	
 	return r
 }
