@@ -13,7 +13,7 @@ type NoteAPI struct {
 	NoteSrv *service.NoteService
 }
 
-func NewUserAPI(noteSrv *service.NoteService) *NoteAPI {
+func NewNoteAPI(noteSrv *service.NoteService) *NoteAPI {
 	return &NoteAPI{
 		NoteSrv: noteSrv,
 	}
@@ -42,7 +42,7 @@ func (na *NoteAPI) CreateNote(c *gin.Context) {
 
 	if err := c.ShouldBind(&data); err != nil {
 		err := errors.New("Invalid request body: " + err.Error())
-		err = model.NewApiError(err, "validation error")
+		err = model.NewApiError(err, 422)
 		c.Error(err)
 		return
 	}

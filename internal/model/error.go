@@ -5,11 +5,11 @@ import "fmt"
 type ApiError struct {
 	Err error `json:"-"`
 	
-	Code string `json:"code"`
+	Code int `json:"code"`
 	Message string `json:"message"`
 }
 
-func NewApiError(err error, code string) (*ApiError) {
+func NewApiError(err error, code int) (*ApiError) {
 	return &ApiError{
 		Err: err,
 		Code: code,

@@ -12,7 +12,7 @@ func (d *GormDatabase) GetNote(ctx context.Context, id uint) (*model.Note, error
 	note, err := gorm.G[model.Note](d.db).Where("id = ?", id).First(ctx)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		err := errors.New("Note is not found")
-		err = model.NewApiError(err, "not-found")
+		err = model.NewApiError(err, 404)
 		return nil, err
 	}
 
