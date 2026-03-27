@@ -57,10 +57,13 @@ func Router(db *database.GormDatabase) *gin.Engine {
 	}))
 
 	r.Use(ErrorHandler())
+	r.LoadHTMLGlob("templates/**/*")
+	
+	r.GET("/", api.Index)
 
 	noteSrv := service.NewNoteService(db) 
 	noteApi := api.NewUserAPI(noteSrv)
-
+	
 	notesGroup := r.Group("/notes")
 	{
 			notesGroup.GET("", noteApi.GetAllNotes)
