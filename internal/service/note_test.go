@@ -15,7 +15,6 @@ func TestCreateNote_Success(t *testing.T) {
     service := NewNoteService(mockRepo)
     ctx := context.Background()
 		
-    // Expectation: SaveNote is called with a note containing our data
     mockRepo.On("SaveNote", ctx, mock.MatchedBy(func(n *model.Note) bool {
         return n.Title == "Hello" && n.Content == "World"
     })).Return(nil)
@@ -53,7 +52,7 @@ func TestFindNote_Service(t *testing.T) {
         
         apiErr, ok := err.(*model.ApiError)
         if ok {
-            assert.Equal(t, "validation error", apiErr.Code)
+            assert.Equal(t, 422, apiErr.Code)
         }
     })
 

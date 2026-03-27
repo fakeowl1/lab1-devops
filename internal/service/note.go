@@ -37,7 +37,7 @@ func (ns *NoteService) FindNote(ctx context.Context, id string) (*model.Note, er
 	uid, err := strconv.ParseUint(id, 10, 32)
 	if (err != nil) {
 		err := errors.New("Can't parse id")
-		err = model.NewApiError(err, "validation error")
+		err = model.NewApiError(err, 422)
 		return nil, err
 	}
 	note, err := ns.repo.GetNote(ctx, uint(uid))
