@@ -19,6 +19,7 @@ func NewUserAPI(noteSrv *service.NoteService) *NoteAPI {
 	}
 }
 
+// GET /notes
 func (na *NoteAPI) GetNote(c *gin.Context) {
 	id := c.Param("id")
 
@@ -28,9 +29,14 @@ func (na *NoteAPI) GetNote(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, note)
+	c.Negotiate(http.StatusOK, gin.Negotiate{
+		Offered: []string{gin.MIMEJSON, gin.MIMEHTML},
+		Data: note,
+		HTMLName: "note.tmpl",
+	})
 }
 
+// POST /notes (title, content)
 func (na *NoteAPI) CreateNote(c *gin.Context) {
 	var data model.CreateNote
 
@@ -42,21 +48,30 @@ func (na *NoteAPI) CreateNote(c *gin.Context) {
 	}
 
 	err := na.NoteSrv.CreateNote(c, data.Title, data.Content)
-	if (err != nil) {
+	if err != nil {
 		c.Error(err)
 		return
 	}
 	
-	c.JSON(http.StatusOK, gin.H{"status": "success"})
+	c.Negotiate(http.StatusOK, gin.Negotiate{
+		Offered: []string{gin.MIMEJSON, gin.MIMEHTML},
+		Data: gin.H{"status": "success"},
+		HTMLName: "status.html",
+	})
 }
 
+// GET /notes
 func (na *NoteAPI) GetAllNotes(c *gin.Context) {
 	notes, err := na.NoteSrv.GetAllNotes(c)
 
-	if (err != nil) {
+	if err != nil {
 		c.Error(err)
 		return
 	}
 
-	c.JSON(http.StatusOK, notes)
+	c.Negotiate(http.StatusOK, gin.Negotiate{
+		Offered: []string{gin.MIMEJSON, gin.MIMEHTML},
+		Data: notes,
+		HTMLName: "notes.tmpl",
+	})
 }

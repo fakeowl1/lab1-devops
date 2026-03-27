@@ -35,10 +35,5 @@ func (d *GormDatabase) GetAllNotes(ctx context.Context) ([]model.Note, error) {
 		return nil, result.Error
 	}
 
-	if result.RowsAffected == 0 {
-		err := errors.New("No notes found")
-		return nil, model.NewApiError(err, "not-found")
-	}
-
 	return notes, nil
 }
