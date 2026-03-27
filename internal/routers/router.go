@@ -21,15 +21,7 @@ func ErrorHandler() gin.HandlerFunc {
 						err := c.Errors.Last().Err
 						
 						if apiErr, ok := errors.AsType[*model.ApiError](err); ok {
-							status := http.StatusInternalServerError
-							switch apiErr.Code {
-								case "not-found":
-									status = 404
-								case "validation error":
-									status = 422
-							}
-
-							c.JSON(status, apiErr)
+							c.JSON(apiErr.Code, apiErr)
 							return
 						} else {
 							c.JSON(http.StatusInternalServerError, map[string]any{
@@ -62,7 +54,7 @@ func Router(db *database.GormDatabase) *gin.Engine {
 	r.GET("/", api.Index)
 
 	noteSrv := service.NewNoteService(db) 
-	noteApi := api.NewUserAPI(noteSrv)
+	noteApi := api.NewNoteAPI(noteSrv)
 	
 	notesGroup := r.Group("/notes")
 	{
