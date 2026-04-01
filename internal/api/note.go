@@ -19,19 +19,22 @@ func NewNoteAPI(noteSrv *service.NoteService) *NoteAPI {
 	}
 }
 
-// GET /notes
+// GET /note/<id>
 func (na *NoteAPI) GetNote(c *gin.Context) {
 	id := c.Param("id")
 
 	note, err := na.NoteSrv.FindNote(c, id)
-	if (err != nil) {
+	if err != nil {
+		if errors.Is(err, model.ErrNoteFound) {
+			err = model.NewApiError(err, 404)
+		}
 		c.Error(err)
 		return
 	}
 
 	c.Negotiate(http.StatusOK, gin.Negotiate{
-		Offered: []string{gin.MIMEJSON, gin.MIMEHTML},
-		Data: note,
+		Offered:  []string{gin.MIMEJSON, gin.MIMEHTML},
+		Data:     note,
 		HTMLName: "note.tmpl",
 	})
 }
@@ -52,10 +55,10 @@ func (na *NoteAPI) CreateNote(c *gin.Context) {
 		c.Error(err)
 		return
 	}
-	
+
 	c.Negotiate(http.StatusOK, gin.Negotiate{
-		Offered: []string{gin.MIMEJSON, gin.MIMEHTML},
-		Data: gin.H{"status": "success"},
+		Offered:  []string{gin.MIMEJSON, gin.MIMEHTML},
+		Data:     gin.H{"status": "success"},
 		HTMLName: "status.html",
 	})
 }
@@ -70,8 +73,8 @@ func (na *NoteAPI) GetAllNotes(c *gin.Context) {
 	}
 
 	c.Negotiate(http.StatusOK, gin.Negotiate{
-		Offered: []string{gin.MIMEJSON, gin.MIMEHTML},
-		Data: notes,
+		Offered:  []string{gin.MIMEJSON, gin.MIMEHTML},
+		Data:     notes,
 		HTMLName: "notes.tmpl",
 	})
 }

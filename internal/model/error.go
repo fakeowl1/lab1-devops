@@ -1,6 +1,13 @@
 package model
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
+
+var (
+	ErrNoteFound = errors.New("note is not found")
+)
 
 type ApiError struct {
 	Err error `json:"-"`

@@ -15,9 +15,9 @@ func setupHealthyTestApp() (*gin.Engine, *service.MockHealthyRepo) {
 	gin.SetMode(gin.TestMode)
 
 	mockRepo := new(service.MockHealthyRepo)
-	
+
 	healthyService := service.NewHealthyService(mockRepo)
-	
+
 	healthyAPI := NewHealthyAPI(healthyService)
 
 	r := gin.Default()
@@ -36,8 +36,8 @@ func TestHealthyAPI_Alive(t *testing.T) {
 	router.ServeHTTP(w, req)
 
 	assert.Equal(t, http.StatusOK, w.Code)
-	assert.Equal(t, `"OK"`, w.Body.String()) 
-	
+	assert.Equal(t, `"OK"`, w.Body.String())
+
 	mockRepo.AssertNotCalled(t, "Ping")
 }
 

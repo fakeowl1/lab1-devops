@@ -27,7 +27,7 @@ func (ha *HealthyAPI) Alive(c *gin.Context) {
 func (ha *HealthyAPI) Ready(c *gin.Context) {
 	healthy, err := ha.HealthySrv.IsHealthy()
 
-	if (healthy) {
+	if healthy {
 		c.JSON(http.StatusOK, "OK")
 	} else {
 		err := model.NewApiError(err, 500)
