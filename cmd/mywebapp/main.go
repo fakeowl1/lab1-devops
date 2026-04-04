@@ -29,7 +29,7 @@ func main() {
 	flag.StringVar(&appPort, "port", "5000", "Port for the HTTP server")
 	flag.StringVar(&dbHost, "db-host", "127.0.0.1", "Database host")
 	flag.StringVar(&dbPort, "db-port", "3306", "Database port")
-	flag.StringVar(&dbUser, "db-user", "root", "Database user")
+	flag.StringVar(&dbUser, "db-user", "mywebapp", "Database user")
 	flag.StringVar(&dbPassword, "db-pass", "password123", "Database password")
 	flag.StringVar(&dbName, "db-name", "notes_db", "Database name")
 	flag.BoolVar(&debugMode, "debug", false, "Debug mode")

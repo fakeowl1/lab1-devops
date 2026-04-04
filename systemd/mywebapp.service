@@ -1,0 +1,15 @@
+[Unit]
+Description=My awesome web app
+After=network.target mariadb.service
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+User=app
+EnvironmentFile=/opt/mywebapp/.env
+WorkingDirectory=/opt/mywebapp
+ExecStart=/opt/mywebapp/mywebapp -db-name $MARIADB_DATABASE -db-user $MARIADB_USER -db-pass $MARIADB_PASSWORD 
+
+[Install]
+WantedBy=multi-user.target
