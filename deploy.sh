@@ -73,7 +73,7 @@ sudo useradd -g operator -m -s /bin/bash operator
 echo "operator:12345678" | sudo chpasswd
 sudo chage -d 0 operator 
 
-echo "operator ALL=(ALL) NOPASSWD: /bin/systemctl start mywebapp.service, /bin/systemctl stop mywebapp.service, /bin/systemctl restart mywebapp.service, /bin/systemctl status mywebapp.service, /bin/systemctl reload nginx" | sudo tee /etc/sudoers.d/operator
+echo "operator ALL=(ALL) NOPASSWD: /usr/bin/systemctl start mywebapp.service, /usr/bin/systemctl stop mywebapp.service, /usr/bin/systemctl restart mywebapp.service, /usr/bin/systemctl status mywebapp.service, /usr/bin/systemctl reload nginx" | sudo tee /etc/sudoers.d/operator
 sudo chmod 440 /etc/sudoers.d/operator
 
 if [ -n "$SUDO_USER" ]; then
