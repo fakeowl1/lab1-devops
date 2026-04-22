@@ -1,4 +1,4 @@
-# Документація з розгортання сервісу нотаток
+# Документація з розгортання сервісу нотаток через скрипт
 
 ## Базовий образ та ОС
 Для роботи сервісу необхідно використовувати офіційний образ дистрибутива **Debian 13 (Trixie)**.
@@ -77,3 +77,18 @@ sudo systemctl restart mywebapp.service
 ls -l /home/student/gradebook
 ```
 *Очікуваний результат: Файл існує, власник — `student`, права доступу — `644`.*
+
+ # Документація з розгортання через Docker Compose
+
+## Вимоги до середовища
+* **ОС:** Linux (рекомендовано Arch Linux або Debian 12/13).
+* **Пакетний менеджер:** Docker Engine 24.0+ та Docker Compose Plugin.
+* **Архітектура:** x86_64.
+
+## Підготовка оточення
+Перед запуском необхідно створити файл `.env` на основі `.env.dist` у корені проєкту з наступними змінними:
+```env
+MARIADB_ROOT_PASSWORD=your_root_password
+MARIADB_DATABASE=notes_db
+MARIADB_USER=app_user
+MARIADB_PASSWORD=app_password
