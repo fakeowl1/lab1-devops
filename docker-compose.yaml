@@ -2,10 +2,11 @@ services:
   mariadb:
     image: mariadb
     healthcheck:
-      test: ["CMD", "mariadb-check", "--all-databases", "-p${MARIADB_ROOT_PASSWORD}"]
-      interval: 5s
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      start_period: 10s
+      interval: 10s
       timeout: 5s
-      retries: 5
+      retries: 3
     restart: always
     environment:
       MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
@@ -37,7 +38,6 @@ services:
     networks:
       - app-network
 
-    #command: ["-db-host=mariadb", "-db-port=3306", "-db-name=${MARIADB_DATABASE}", "-db-password=${MARIADB_PASSWORD}", "-db-user=${MARIADB_USER}"]
     command:
       - "-port=5000"
       - "-db-host=mariadb"
