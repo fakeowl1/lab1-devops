@@ -30,7 +30,7 @@ func (ha *HealthyAPI) Ready(c *gin.Context) {
 	if healthy {
 		c.JSON(http.StatusOK, "OK")
 	} else {
-		err := model.NewApiError(err, 500)
+		err := model.NewApiError(err, http.StatusInternalServerError)
 		c.Error(err)
 		return
 	}

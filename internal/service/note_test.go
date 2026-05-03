@@ -48,7 +48,7 @@ func TestFindNote_Service(t *testing.T) {
         assert.Error(t, err)
         assert.Nil(t, note)
         
-        assert.Contains(t, err.Error(), "Can't parse id")
+        assert.Contains(t, err.Error(), "can't parse id")
         
         apiErr, ok := err.(*model.ApiError)
         if ok {

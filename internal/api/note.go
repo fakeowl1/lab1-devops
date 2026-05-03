@@ -26,7 +26,11 @@ func (na *NoteAPI) GetNote(c *gin.Context) {
 	note, err := na.NoteSrv.FindNote(c, id)
 	if err != nil {
 		if errors.Is(err, model.ErrNoteFound) {
-			err = model.NewApiError(err, 404)
+			err = model.NewApiError(err, http.StatusNotFound)
+		}
+
+		if errors.Is(err, model.ErrCantParseId) {
+			err = model.NewApiError(err, http.StatusBadRequest)
 		}
 		c.Error(err)
 		return
@@ -45,7 +49,7 @@ func (na *NoteAPI) CreateNote(c *gin.Context) {
 
 	if err := c.ShouldBind(&data); err != nil {
 		err := errors.New("Invalid request body: " + err.Error())
-		err = model.NewApiError(err, 422)
+		err = model.NewApiError(err, http.StatusBadRequest)
 		c.Error(err)
 		return
 	}

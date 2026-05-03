@@ -48,7 +48,7 @@ func main() {
 	defer db.Close()
 
 	router := routers.Router(db)
-	router.SetTrustedProxies(nil)
+	_ = router.SetTrustedProxies(nil)
 
 	srv := &http.Server{
 		Addr:    ":" + appPort,
