@@ -1,0 +1,107 @@
+---
+name: Continuous Integration 
+
+on:
+  push:
+    branches: ['main']
+    tags: ['*']
+  pull_request:
+    branches: ['main']
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+      
+      - name: Set up go
+        uses: actions/setup-go@v6
+        with:
+          go-version: 1.26 
+
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v9
+        with:
+          version: v2.11
+      
+      - name: Runs shellcheck
+        uses: ludeeus/action-shellcheck@master
+      
+      - uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: Dockerfile
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Set up Golang
+        uses: actions/setup-go@v6
+      
+      - name: Generate test coverage
+        run: go test ./... -coverprofile=./coverage.out
+
+      - name: Check test coverage
+        uses: vladopajic/go-test-coverage@v2
+        with:
+          config: ./.testcoverage.yml
+
+      - name: Upload Coverage Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: go-coverage-report
+          path: coverage.out
+
+  push:
+    needs: [lint, test]
+    runs-on: ubuntu-latest
+
+    env:
+      IMAGE_NAME: my-app
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Build image
+        run: docker build . --file Dockerfile --tag $IMAGE_NAME --label "runnumber=${GITHUB_RUN_ID}"
+
+      - name: Log in to registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Push image
+        run: |
+          IMAGE_ID=ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME
+
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          
+          FULL_SHA=${{ github.sha }}
+
+          if [[ "${{ github.ref }}" == "refs/heads/"* ]]; then
+            [ "$VERSION" == "main" ] && VERSION=latest
+            
+            docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
+            docker push $IMAGE_ID:$VERSION
+            
+            docker tag $IMAGE_NAME $IMAGE_ID:sha-$FULL_SHA
+            docker push $IMAGE_ID:sha-$FULL_SHA
+          fi
+
+          if [[ "${{ github.ref }}" == "refs/tags/"* ]]; then
+            VERSION=$(echo $VERSION | sed -e 's/^v//')
+            
+            docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
+            docker push $IMAGE_ID:$VERSION
+            
+            docker tag $IMAGE_NAME $IMAGE_ID:stable
+            docker push $IMAGE_ID:stable
+          fi
