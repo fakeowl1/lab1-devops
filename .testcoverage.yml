@@ -1,4 +1,4 @@
-profile: cover.out
+profile: coverage.out
 
 threshold:
   total: 40
