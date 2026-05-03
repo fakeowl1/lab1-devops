@@ -35,7 +35,7 @@ sudo tar -C /usr/local -xzf go1.26.1.linux-amd64.tar.gz
 
 rm go1.26.1.linux-amd64.tar.gz
 
-echo 'export PATH=$PATH:/usr/local/go/bin' | sudo tee /etc/profile.d/golang.sh
+echo "export PATH=$PATH:/usr/local/go/bin" | sudo tee /etc/profile.d/golang.sh
 # shellcheck source=/dev/null
 source /etc/profile.d/golang.sh
 
