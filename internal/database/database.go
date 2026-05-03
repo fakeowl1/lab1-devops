@@ -39,14 +39,17 @@ func New(host, user, port, password, dbName string) (*GormDatabase, error) {
 		return nil, err
 	}
 
-	db.AutoMigrate(&model.Note{})
+	err = db.AutoMigrate(&model.Note{})
+	if (err != nil) {
+		log.Fatalf("migrate error: %v", err)
+	}
 	return &GormDatabase{db: db}, nil
 }
 
 func (d *GormDatabase) Close() {
 	sqlDB, err := d.db.DB()
 	if (err != nil) {
-		return
+		log.Fatalf("error while closing database: %v", err)
 	}
 	sqlDB.Close()
 }

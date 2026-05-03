@@ -7,6 +7,7 @@ import (
 
 var (
 	ErrNoteFound = errors.New("note is not found")
+	ErrCantParseId = errors.New("can't parse id")
 )
 
 type ApiError struct {

@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"errors"
 	"notes-service/internal/model"
 	"strconv"
 )
@@ -36,9 +35,7 @@ func (ns *NoteService) CreateNote(ctx context.Context, title string, content str
 func (ns *NoteService) FindNote(ctx context.Context, id string) (*model.Note, error) {
 	uid, err := strconv.ParseUint(id, 10, 32)
 	if (err != nil) {
-		err := errors.New("Can't parse id")
-		err = model.NewApiError(err, 422)
-		return nil, err
+		return nil, model.ErrCantParseId
 	}
 	note, err := ns.repo.GetNote(ctx, uint(uid))
 
