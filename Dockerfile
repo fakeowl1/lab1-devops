@@ -8,7 +8,7 @@ RUN go mod download
 COPY . .
 RUN CGO_ENABLED=0 go build -v -o /usr/local/bin/app ./cmd/mywebapp/main.go
 
-FROM gcr.io/distroless/static
+FROM gcr.io/distroless/static:nonroot
 COPY --from=builder /usr/local/bin/app /
 COPY --from=builder /usr/src/app/templates /templates
 
