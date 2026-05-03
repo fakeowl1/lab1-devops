@@ -13,7 +13,10 @@ func TestPing(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to open sqlmock: %v", err)
 	}
-	defer db.Close()
+
+	defer func () {
+		_ = db.Close()
+	}()
 
 	mock.ExpectPing()
 
