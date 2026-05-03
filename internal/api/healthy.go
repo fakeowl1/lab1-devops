@@ -3,16 +3,19 @@ package api
 import (
 	"net/http"
 	"notes-service/internal/model"
-	"notes-service/internal/service"
 
 	"github.com/gin-gonic/gin"
 )
 
-type HealthyAPI struct {
-	HealthySrv *service.HealthyService
+type HealthyService interface {
+	IsHealthy() (bool, error)
 }
 
-func NewHealthyAPI(noteSrv *service.HealthyService) *HealthyAPI {
+type HealthyAPI struct {
+	HealthySrv HealthyService
+}
+
+func NewHealthyAPI(noteSrv HealthyService) *HealthyAPI {
 	return &HealthyAPI{
 		HealthySrv: noteSrv,
 	}
