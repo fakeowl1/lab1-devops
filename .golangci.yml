@@ -1,7 +1,7 @@
-version: 1
-
-linters-settings:
-  errcheck:
-    exclude-functions:
-      - (*github.com/gin-gonic/gin.Context).Error
-      - (*github.com/gin-gonic/gin.Engine).SetTrustedProxies
+version: "2"
+linters:
+  settings:
+    errcheck:
+      exclude-functions:
+        - (*github.com/gin-gonic/gin.Context).Error
+        - (*github.com/gin-gonic/gin.Engine).SetTrustedProxies
