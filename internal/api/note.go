@@ -1,19 +1,25 @@
 package api
 
 import (
+	"context"
 	"errors"
 	"net/http"
 	"notes-service/internal/model"
-	"notes-service/internal/service"
 
 	"github.com/gin-gonic/gin"
 )
 
-type NoteAPI struct {
-	NoteSrv *service.NoteService
+type NoteService interface {
+	CreateNote(ctx context.Context, title string, content string) error
+	FindNote(ctx context.Context, id string) (*model.Note, error)
+	GetAllNotes(ctx context.Context) ([]model.Note, error)
 }
 
-func NewNoteAPI(noteSrv *service.NoteService) *NoteAPI {
+type NoteAPI struct {
+	NoteSrv NoteService 
+}
+
+func NewNoteAPI(noteSrv NoteService) *NoteAPI {
 	return &NoteAPI{
 		NoteSrv: noteSrv,
 	}

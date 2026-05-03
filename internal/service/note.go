@@ -6,7 +6,6 @@ import (
 	"strconv"
 )
 
-
 type NoteRepo interface {
   GetNote(ctx context.Context, id uint) (*model.Note, error)
 	SaveNote(ctx context.Context, note *model.Note) error

@@ -1,4 +1,9 @@
-profile: cover.out
+profile: coverage.out
 
 threshold:
   total: 40
+
+exclude:
+  paths:
+    - ^cmd
+    - ^mock.go

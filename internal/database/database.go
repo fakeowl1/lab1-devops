@@ -47,11 +47,11 @@ func New(host, user, port, password, dbName string) (*GormDatabase, error) {
 }
 
 func (d *GormDatabase) Close() {
-	sqlDB, err := d.db.DB()
+	sqlDB, _ := d.db.DB()
+	err := sqlDB.Close()
 	if (err != nil) {
 		log.Fatalf("error while closing database: %v", err)
 	}
-	sqlDB.Close()
 }
 
 func (d* GormDatabase) Ping() error {

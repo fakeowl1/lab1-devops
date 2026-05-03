@@ -5,7 +5,18 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 )
+
+
+type MockHealthyRepo struct {
+    mock.Mock
+}
+
+func (m *MockHealthyRepo) Ping() error {
+    args := m.Called()
+    return args.Error(0)
+}
 
 func TestHealthyService_IsHealthy_Success(t *testing.T) {
 	mockRepo := new(MockHealthyRepo) 
