@@ -5,10 +5,9 @@ if [ $# -lt 1 ]; then
     exit 1
 fi
 
-token=$1
+token="$1"
 
-# Create a folder
-mkdir actions-runner && cd actions-runner
+mkdir -p actions-runner && cd actions-runner || exit 1
 
 # Download the latest runner package
 curl -o actions-runner-linux-x64-2.334.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.334.0/actions-runner-linux-x64-2.334.0.tar.gz
@@ -16,5 +15,4 @@ curl -o actions-runner-linux-x64-2.334.0.tar.gz -L https://github.com/actions/ru
 # Extract the installer
 tar xzf ./actions-runner-linux-x64-2.334.0.tar.gz
 
-# Create the runner and start the configuration experience
-./config.sh --url https://github.com/fakeowl1/lab1-devops --token $token --unattended
+./config.sh --url https://github.com/fakeowl1/lab1-devops --token "$token" --unattended
