@@ -1,15 +1,25 @@
 [Unit]
-Description=My awesome web app
-After=network.target mariadb.service
+Description=My awesome web app container
+After=docker.service network.target mariadb.service
+Requires=docker.service
 
 [Service]
 Type=simple
 Restart=always
 RestartSec=1
-User=app
+User=root
 EnvironmentFile=/opt/mywebapp/.env
-WorkingDirectory=/opt/mywebapp
-ExecStart=/opt/mywebapp/mywebapp -db-name $MARIADB_DATABASE -db-user $MARIADB_USER -db-pass $MARIADB_PASSWORD 
+
+ExecStartPre=-/usr/bin/docker stop mywebapp
+ExecStartPre=-/usr/bin/docker rm mywebapp
+
+ExecStart=/usr/bin/docker run --name mywebapp --network host ghcr.io/fakeowl1/my-app:stable \
+    -port 5000 \
+    -db-host 127.0.0.1 \
+    -db-port 3306 \
+    -db-user ${MARIADB_USER} \
+    -db-pass ${MARIADB_PASSWORD} \
+    -db-name ${MARIADB_DATABASE}
 
 [Install]
 WantedBy=multi-user.target
