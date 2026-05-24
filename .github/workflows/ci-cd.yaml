@@ -107,3 +107,16 @@ jobs:
             docker tag $IMAGE_NAME $IMAGE_ID:stable
             docker push $IMAGE_ID:stable
           fi
+
+  deploy:
+    needs: push
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: self-hosted
+    steps:
+      - name: Checkout deployment code
+        uses: actions/checkout@v4
+
+      - name: Execute Continuous Delivery Script
+        run: |
+          chmod +x ./deploy.sh
+          ./deploy.sh
