@@ -16,13 +16,13 @@ import (
 )
 
 var (
-	appPort    string
-	dbHost     string
-	dbPort     string
-	dbUser     string
-	dbPassword string
-	dbName     string
-	debugMode  bool
+	appPort   string
+	dbHost    string
+	dbPort    string
+	dbUser    string
+	dbPass    string
+	dbName    string
+	debugMode bool
 )
 
 func main() {
@@ -30,7 +30,7 @@ func main() {
 	flag.StringVar(&dbHost, "db-host", "127.0.0.1", "Database host")
 	flag.StringVar(&dbPort, "db-port", "3306", "Database port")
 	flag.StringVar(&dbUser, "db-user", "mywebapp", "Database user")
-	flag.StringVar(&dbPassword, "db-pass", "password123", "Database password")
+	flag.StringVar(&dbPass, "db-pass", "password123", "Database password")
 	flag.StringVar(&dbName, "db-name", "notes_db", "Database name")
 	flag.BoolVar(&debugMode, "debug", false, "Debug mode")
 	flag.Parse()
@@ -38,9 +38,9 @@ func main() {
 	if !debugMode {
 		gin.SetMode(gin.ReleaseMode)
 	}
-	
+
 	log.Printf("Connecting to database %s at %s:%s...", dbName, dbHost, dbPort)
-	db, err := database.New(dbHost, dbUser, dbPort, dbPassword, dbName)
+	db, err := database.New(dbHost, dbUser, dbPort, dbPass, dbName)
 	if err != nil {
 		log.Fatalf("Failed to connect to DB: %v", err)
 	}
@@ -52,7 +52,7 @@ func main() {
 
 	srv := &http.Server{
 		Addr:    ":" + appPort,
-		Handler: router, 
+		Handler: router,
 	}
 
 	go func() {
