@@ -13,7 +13,8 @@ sudo chmod a+r /etc/apt/keyrings/docker.asc
 sudo tee /etc/apt/sources.list.d/docker.sources <<EOF
 Types: deb
 URIs: https://download.docker.com/linux/ubuntu
-Suites: $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}")
+Suites: $(# shellcheck disable=SC1091
+          . /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}")
 Components: stable
 Architectures: $(dpkg --print-architecture)
 Signed-By: /etc/apt/keyrings/docker.asc
@@ -26,11 +27,14 @@ sudo usermod -aG docker "$USER"
 sudo systemctl enable --now mariadb
 sleep 5
 
-[ -f .env ] && source .env
+if [ -f ".env" ]; then
+    # shellcheck disable=SC1091
+    source ".env"
+fi
 
-sudo mariadb -e "CREATE DATABASE IF NOT EXISTS ${MARIADB_DATABASE};"
+sudo mariadb -e "CREATE DATABASE IF NOT EXISTS \"${MARIADB_DATABASE}\";"
 sudo mariadb -e "CREATE USER IF NOT EXISTS '${MARIADB_USER}'@'localhost' IDENTIFIED BY '${MARIADB_PASSWORD}';"
-sudo mariadb -e "GRANT ALL PRIVILEGES ON ${MARIADB_DATABASE}.* TO '${MARIADB_USER}'@'localhost';"
+sudo mariadb -e "GRANT ALL PRIVILEGES ON \"${MARIADB_DATABASE}\".* TO '${MARIADB_USER}'@'localhost';"
 sudo mariadb -e "FLUSH PRIVILEGES;"
 
 sudo cp ./nginx/nginx.conf /etc/nginx/
@@ -39,9 +43,9 @@ sudo ln -sf /etc/nginx/sites-available/mywebapp.conf /etc/nginx/sites-enabled/
 sudo rm -f /etc/nginx/sites-enabled/default
 sudo systemctl enable --now nginx
 
-sudo mkdir -p $APP_HOME
-sudo cp .env $APP_HOME/
-sudo chown -R root:root $APP_HOME
+sudo mkdir -p "$APP_HOME"
+sudo cp .env "$APP_HOME/"
+sudo chown -R root:root "$APP_HOME"
 sudo chmod 600 "$APP_HOME/.env"
 
 sudo useradd --system --shell /usr/sbin/nologin app || true
@@ -59,7 +63,7 @@ echo "24" | sudo tee /home/student/gradebook
 sudo chown student:student /home/student/gradebook
 sudo chmod 644 /home/student/gradebook
 
-sudo useradd -g operator -m -s /bin/bash operator || true
+sudo useradd -m -U -s /bin/bash operator || true
 echo "operator:12345678" | sudo chpasswd
 sudo chage -d 0 operator 
 
